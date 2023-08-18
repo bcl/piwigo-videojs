@@ -27,6 +27,8 @@
 // Check whether we are indeed included by Piwigo.
 if (!defined('PHPWG_ROOT_PATH')) die('Hacking attempt!');
 
+include_once("function_utils.php");
+
 try {
 	putenv('LANG=en_US.UTF-8');
 	$json = shell_exec($sync_options['ffprobe'] ." -hide_banner -loglevel fatal -show_error -show_format -show_streams -show_programs -show_chapters -show_private_data -print_format json \"". $filename."\"");
@@ -112,10 +114,9 @@ if (isset($video['tags']['rotate']) and (int)$video['tags']['rotate'] != 0)
 	$rotation_code = pwg_image::get_rotation_code_from_angle((int)$video['tags']['rotate']);
 	$exif['rotation'] = $rotation_code;
 }
-if (isset($general['tags']['creation_time']))
+if (isset($general['tags']['creation_time']) and check_date($general['tags']['creation_time']))
 {
-//	$logger->debug('ffprobe: date creation is '.$general['tags']['creation_time']);
-	$exif['date_creation'] = date('Y-m-d H:i:s', strtotime((string)$general['tags']['creation_time']));
+	$exif['date_creation'] = check_date((string)$general['tags']['creation_time']);
 }
 if (isset($general['tags']['location']))
 {

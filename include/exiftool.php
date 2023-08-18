@@ -27,6 +27,8 @@
 // Check whether we are indeed included by Piwigo.
 if (!defined('PHPWG_ROOT_PATH')) die('Hacking attempt!');
 
+include_once("function_utils.php");
+
 try {
 	putenv('LANG=en_US.UTF-8');
 	$json = shell_exec($sync_options['exiftool'] ." -struct -n -json \"". $filename."\"");
@@ -78,21 +80,9 @@ if (isset($general['Rotation']) and (int)$general['Rotation'] != 0)
 	$rotation_code = pwg_image::get_rotation_code_from_angle((int)$general['Rotation']);
 	$exif['rotation'] = $rotation_code;
 }
-if (isset($general['MediaCreateDate']))
+if (isset($general['MediaCreateDate']) and check_date((string)$general['MediaCreateDate']))
 {
-	/*  (str_contains requires PHP8) */
-	if (strpos($general['MediaCreateDate'], ':') !== false)
-	{
-		if ((strcmp($general['MediaCreateDate'], "0000:00:00 00:00:00") !== 0) and
-			($timestamp = strtotime((string)$general['MediaCreateDate'])))
-		{
-			$exif['date_creation'] = date('Y-m-d H:i:s', $timestamp);
-		}
-	}
-	else
-	{
-		$exif['date_creation'] = date('Y-m-d H:i:s', substr($general['MediaCreateDate'], 0, 10));
-	}
+	$exif['date_creation'] = check_date((string)$general['MediaCreateDate']);
 }
 if (isset($general['GPSLatitude']) and isset($general['GPSLongitude']))
 {
