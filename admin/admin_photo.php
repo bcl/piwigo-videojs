@@ -116,7 +116,7 @@ if (isset($videojs_metadata) and isset($videojs_metadata['metadata']))
 $output_dir = dirname($picture['path']) . '/pwg_representative/';
 $parts = pathinfo($picture['path']);
 $extension = $parts['extension'];
-$vjs_extensions = array('ogg', 'ogv', 'mp4', 'm4v', 'webm', 'webmv');
+$vjs_extensions = array('ogg', 'ogv', 'mp4', 'm4v', 'mov', 'avi', 'webm', 'webmv');
 $files_ext = array_merge(array(), $vjs_extensions, array_map('strtoupper', $vjs_extensions) );
 // Add the current file in array
 $videossrc[] = embellish_url($picture['path']);
